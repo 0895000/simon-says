@@ -1,0 +1,20 @@
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .manage-block {
+    max-height: 210px;
+  }
+
+  .levels__light,
+  .levels__middle,
+  .levels__high {
+    width: 105px;
+    padding: 10px 10px;
+  }
+
+  [data="U"] {
+    margin-left: 0px;
+  }
+}

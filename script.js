@@ -116,6 +116,40 @@ function middleInit() {
 middleInit();
 
 
+  let width = document.documentElement.clientWidth;
+  console.log(width);
+
+  if (width < 600) {
+    function middleInit() {
+      let block = '';
+    
+      for (let i = 0; i < letters.length; i++) {
+        if (i == 5 || i == 10 || i == 15 || i == 20 || i == 25) {
+          block += '<div class="clearfix"></div>';
+        }
+        block += '<button class="key" data="' + letters[i] + '" >' + letters[i] + '</button>';
+      }
+      document.querySelector('#letterskeys').innerHTML = block;
+    }
+    middleInit();
+
+
+    function lightInit() {
+      let block = '';
+    
+      for (let i = 0; i < digits.length; i++) {
+        if (i == 5 || i == 10) {
+          block += '<div class="clearfix"></div>';
+        }
+        block += '<button class="key" data="' + digits[i] + '" >' + digits[i] + '</button>';
+      }
+      document.querySelector('#digitskeys').innerHTML = block;
+    }
+    
+    lightInit();
+  }
+
+
 const openModal = () => {
   const modal = document.createElement('div');
   modal.classList.add('modal');
