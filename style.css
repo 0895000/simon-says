@@ -95,8 +95,14 @@ body {
   cursor: pointer;
 }
 
+.active {
+  background-color: #fff;
+  color: rgb(7, 7, 120);
+  border: 2px solid rgb(7, 7, 120);
+}
+
 .easy {
-  display: none;
+  display: block;
 }
 
 .medium {
@@ -117,6 +123,12 @@ body {
   border-radius: 6px;
   margin: 2px;
   cursor: pointer;
+}
+
+.key_active {
+  color: rgb(7, 7, 120);
+  background-color: #fff;
+  border: 2px solid rgb(7, 7, 120);
 }
 
 .clearfix {

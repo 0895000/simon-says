@@ -18,7 +18,7 @@ const levels = document.createElement('div');
 levels.classList.add('levels');
 
 const easyButton = document.createElement('button');
-easyButton.classList.add('levels__light');
+easyButton.classList.add('levels__light', 'active');
 easyButton.textContent = 'Easy';
 
 const mediumButton = document.createElement('button');
@@ -72,19 +72,27 @@ const digits = [
 ];
 
 
+function setActiveButton(activeButton) {
+  easyButton.classList.remove('active');
+  mediumButton.classList.remove('active');
+  hardButton.classList.remove('active');
+  activeButton.classList.add('active');
+}
+
 easyButton.addEventListener('click', () => {
+  setActiveButton(easyButton);
   easy.style.display = 'block';
   medium.style.display = 'none';
-  mediumButton.style.pointerEvents = 'none';
-  hardButton.style.pointerEvents = 'none';
 });
 
 mediumButton.addEventListener('click', () => {
+  setActiveButton(mediumButton);
   medium.style.display = 'block';
   easy.style.display = 'none';
 });
 
 hardButton.addEventListener('click', () => {
+  setActiveButton(hardButton);
   easy.style.display = 'block';
   medium.style.display = 'block';
 });
@@ -93,7 +101,6 @@ function lightInit() {
   let block = '';
 
   for (let i = 0; i < digits.length; i++) {
-
     block += '<button class="key" data="' + digits[i] + '" >' + digits[i] + '</button>';
   }
   document.querySelector('#digitskeys').innerHTML = block;
@@ -117,7 +124,6 @@ middleInit();
 
 
   let width = document.documentElement.clientWidth;
-  console.log(width);
 
   if (width < 600) {
     function middleInit() {
@@ -181,7 +187,7 @@ const openModal = () => {
 let currentRound = 1;
 let sequence = [];
 
-function generateSequence(length) {
+function generateSequenceDigits(length) {
     const digits = [ "0", "1", "2", "3", "4", "5","6", "7", "8", "9"];
     const newSequence = [];
     for (let i = 0; i < length; i++) {
@@ -191,10 +197,30 @@ function generateSequence(length) {
     return newSequence;
 }
 
+function generateSequenceLetters(length) {
+  const letters = [
+    "A", "B", "C", "D", "E", "F","G", "H", "I",
+    "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+    "S", "T", "U", "V", "W", "X", "Y", "Z",
+  ];
+  const newSequence = [];
+  for (let i = 0; i < length; i++) {
+      newSequence.push(letters[Math.floor(Math.random() * letters.length)]);
+  }
+  console.log(newSequence);
+  return newSequence;
+}
+
 
 function startRound() {
-    sequence = generateSequence(currentRound * 2); // Generate sequence for current round
+  if (easyButton.classList.contains('active')) {
+    sequence = generateSequenceDigits(currentRound * 2);
     highlightSequence(sequence);
+  }
+  if (mediumButton.classList.contains('active')) {
+    sequence = generateSequenceLetters(currentRound * 2);
+    highlightSequence(sequence);
+  }
 }
 
 function highlightSequence(sequence) {
@@ -205,13 +231,13 @@ function highlightSequence(sequence) {
             digitButton.classList.add('highlight');
             setTimeout(() => {
                 digitButton.classList.remove('highlight');
-            }, 1000); // Adjust highlight duration as needed
+            }, 1000);
             i++;
         } else {
             clearInterval(highlightInterval);
             getPlayerInput();
         }
-    }, 1000); // Adjust interval between highlights
+    }, 1000);
 }
 
 
@@ -219,11 +245,9 @@ function getPlayerInput() {
   let playerInput = [];
   const keyButtons = document.querySelectorAll('.key');
 
-  // Function to handle button clicks
   function handleClick(event) {
       playerInput.push(event.target.getAttribute('data'));
       if (playerInput.length === sequence.length) {
-          // Remove event listeners after input is complete
           keyButtons.forEach(button => {
               button.removeEventListener('click', handleClick);
           });
@@ -231,7 +255,6 @@ function getPlayerInput() {
       }
   }
 
-  // Add event listeners
   keyButtons.forEach(button => {
       button.addEventListener('click', handleClick);
   });
@@ -251,39 +274,59 @@ function checkAnswer(playerInput) {
     } else {
         roundDiv.style.backgroundColor = 'red';
         repeatButton.addEventListener('click', () => {
-          startRound(); // Restart the current round
+          startRound();
         })
     }
 }
 
-startButton.addEventListener('click', () => {
-    startRound();
-    easy.style.display = '1';
-    medium.style.display = '0';
-    startButton.style.display = 'none';
-    repeatButton.style.display = 'block';
-    newGameButton.style.display = 'block';
+function disableButtons() {
+  easyButton.disabled = true;
+  mediumButton.disabled = true;
+  hardButton.disabled = true;
+
+  const activeButton = document.querySelector('.levels__light.active, .levels__middle.active, .levels__high.active');
+  if (activeButton) {
+    activeButton.disabled = false;
+  }
+}
+
+startButton.addEventListener("click", () => {
+  startRound();
+  disableButtons();
+
+  if (easyButton.classList.contains("active")) {
+    easy.style.display = "block";
+    medium.style.display = "none";
+    startButton.style.display = "none";
+    repeatButton.style.display = "block";
+    newGameButton.style.display = "block";
+  }
+  if (mediumButton.classList.contains("active")) {
+    easy.style.display = "none";
+    medium.style.display = "block";
+    startButton.style.display = "none";
+    repeatButton.style.display = "block";
+    newGameButton.style.display = "block";
+  }
+  const keys = document.querySelectorAll(".key");
+  keys.forEach((key) => {
+    key.addEventListener("mousedown", () => key.classList.add("key_active"));
+    key.addEventListener("mouseup", () => key.classList.remove("key_active"));
+  });
 });
+
 
 
 
 function resetGame() {
   currentRound = 1;
   sequence = [];
-
-  // Reset round backgrounds
   for (let i = 0; i < rounds.children.length; i++) {
-      rounds.children[i].style.backgroundColor = ''; // Or set to your default color
+      rounds.children[i].style.backgroundColor = '';
   }
-
-      // Clear player input (if stored globally)
-      //playerInput = [];
-
-      // Optionally: Hide the game elements and show the start button again
-      // startButton.style.display = 'block';
-      // easy.style.display = 'none';
-      // medium.style.display = 'none';
-      // ... other game elements
+  easyButton.disabled = false;
+  mediumButton.disabled = false;
+  hardButton.disabled = false;
 }
 
 newGameButton.addEventListener('click', () => {
