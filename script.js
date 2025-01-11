@@ -214,6 +214,21 @@ function generateSequenceLetters(length) {
   return newSequence;
 }
 
+function generateSequenceFull(length) {
+  const full = [
+    "0", "1", "2", "3", "4", "5","6", "7", "8", "9",
+    "A", "B", "C", "D", "E", "F","G", "H", "I",
+    "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+    "S", "T", "U", "V", "W", "X", "Y", "Z",
+  ];
+  const newSequence = [];
+  for (let i = 0; i < length; i++) {
+      newSequence.push(full[Math.floor(Math.random() * full.length)]);
+  }
+  console.log(newSequence);
+  return newSequence;
+}
+
 
 function startRound() {
   if (easyButton.classList.contains('active')) {
@@ -224,23 +239,39 @@ function startRound() {
     sequence = generateSequenceLetters(currentRound * 2);
     highlightSequence(sequence);
   }
+  if (hardButton.classList.contains('active')) {
+    sequence = generateSequenceFull(currentRound * 2);
+    highlightSequence(sequence);
+  }
 }
 
 function highlightSequence(sequence) {
-    let i = 0;
-    const highlightInterval = setInterval(() => {
-        if (i < sequence.length) {
-            const digitButton = document.querySelector(`.key[data="${sequence[i]}"]`);
-            digitButton.classList.add('highlight');
-            setTimeout(() => {
-                digitButton.classList.remove('highlight');
-            }, 1000);
-            i++;
-        } else {
-            clearInterval(highlightInterval);
-            getPlayerInput();
-        }
-    }, 1000);
+  let i = 0;
+  const keyButtons = document.querySelectorAll(".key");
+
+  keyButtons.forEach(button => {
+    button.disabled = true;
+  });
+
+  const highlightInterval = setInterval(() => {
+    if (i < sequence.length) {
+      keyButtons.disabled = false;
+      const digitButton = document.querySelector(`.key[data="${sequence[i]}"]`);
+      digitButton.classList.add("highlight");
+      setTimeout(() => {
+        digitButton.classList.remove("highlight");
+      }, 1000);
+      i++;
+    } else {
+      clearInterval(highlightInterval);
+
+      keyButtons.forEach(button => {
+        button.disabled = false;
+      });
+
+      getPlayerInput();
+    }
+  }, 1000);
 }
 
 
@@ -325,6 +356,13 @@ startButton.addEventListener("click", () => {
   }
   if (mediumButton.classList.contains("active")) {
     easy.style.display = "none";
+    medium.style.display = "block";
+    startButton.style.display = "none";
+    repeatButton.style.display = "block";
+    newGameButton.style.display = "block";
+  }
+  if (hardButton.classList.contains("active")) {
+    easy.style.display = "block";
     medium.style.display = "block";
     startButton.style.display = "none";
     repeatButton.style.display = "block";
