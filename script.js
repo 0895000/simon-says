@@ -29,10 +29,13 @@ const hardButton = document.createElement('button');
 hardButton.classList.add('levels__high');
 hardButton.textContent = 'Hard';
 
+const keysContainer = document.createElement('div');
+keysContainer.classList.add('keys-container');
 const easy = document.createElement('div');
 easy.classList.add('easy');
 const medium = document.createElement('div');
 medium.classList.add('medium');
+keysContainer.append(easy, medium);
 
 const rounds = document.createElement('div');
 rounds.classList.add('rounds');
@@ -51,7 +54,7 @@ manageBlock.append(repeatButton, startButton, newGameButton);
 rounds.append(roundOne, roundTwo, roundThree, roundFour, roundFive);
 levels.append(easyButton, mediumButton, hardButton);
 
-container.append(manageBlock, levels, easy, medium, rounds);
+container.append(manageBlock, levels, keysContainer, rounds);
 document.body.append(container);
 
 const digitsKeyboard = document.createElement('div');
@@ -156,13 +159,13 @@ middleInit();
   }
 
 
-const openModal = () => {
+const openModal = (message) => {
   const modal = document.createElement('div');
   modal.classList.add('modal');
   const modalMain = document.createElement('div');
   modalMain.classList.add('modal__main');
   const modalText = document.createElement('p');
-  modalText.innerHTML = 'Congratulation !'
+  modalText.innerHTML = message;
   const modalClose = document.createElement("button");
   modalClose.classList.add('modal__close');
   modalClose.innerHTML = `
@@ -260,21 +263,40 @@ function getPlayerInput() {
   });
 }
 
+const clearRounds = () => {
+  roundOne.textContent = '';
+  roundTwo.textContent = '';
+  roundThree.textContent = '';
+  roundFour.textContent = '';
+  roundFive.textContent = '';
+}
+
 function checkAnswer(playerInput) {
     const roundDiv = rounds.children[currentRound - 1];
 
     if (playerInput.join('') === sequence.join('')) {
         roundDiv.style.backgroundColor = 'green';
+        roundDiv.textContent = currentRound;
         currentRound++;
         if (currentRound <= 5) {
             startRound();
         } else {
-          openModal();
+          openModal('Congratulations! You won!');
+          clearRounds();
         }
     } else {
         roundDiv.style.backgroundColor = 'red';
+        let mistakesCount = 0;
         repeatButton.addEventListener('click', () => {
           startRound();
+          mistakesCount++;
+          if (mistakesCount > 1) {
+            resetGame();
+            startButton.style.display = 'block';
+            repeatButton.style.display = 'none';
+            newGameButton.style.display = 'none';
+            openModal('Game Over! Try again!');
+          }
         })
     }
 }
@@ -312,6 +334,7 @@ startButton.addEventListener("click", () => {
   keys.forEach((key) => {
     key.addEventListener("mousedown", () => key.classList.add("key_active"));
     key.addEventListener("mouseup", () => key.classList.remove("key_active"));
+    key.addEventListener("touchstart", () => key.classList.add("key_active"));
   });
 });
 

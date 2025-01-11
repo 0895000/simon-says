@@ -1,6 +1,11 @@
 @media (max-width: 600px) {
   .container {
-    padding: 15px;
+    padding: 5px;
+    margin: 10px;
+  }
+
+  .keys-container {
+    max-height: 365px;
   }
 
   .manage-block {
@@ -16,5 +21,9 @@
 
   [data="U"] {
     margin-left: 0px;
+  }
+
+  .rounds {
+    margin-top: 50px;
   }
 }

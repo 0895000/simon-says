@@ -5,14 +5,16 @@ body {
 }
 
 .container {
-  max-width: 1276px;
-  height: 100vh;
-  margin: 0 auto;
+  max-width: 550px;
+  height: 91vh;
+  margin: 10px auto;
   padding: 20px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  border: 3px solid rgb(7, 7, 120);
+  border-radius: 8px;
 }
 
 .manage-block {
@@ -99,6 +101,14 @@ body {
   background-color: #fff;
   color: rgb(7, 7, 120);
   border: 2px solid rgb(7, 7, 120);
+}
+
+.keys-container {
+  max-width: 540px;
+  max-height: 176px;
+  height: 100%;
+  border: 3px solid rgb(7, 7, 120);
+  border-radius: 8px;
 }
 
 .easy {
